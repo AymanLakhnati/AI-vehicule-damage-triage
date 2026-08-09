@@ -1,0 +1,29 @@
+CarDD Frozen ResNet18 Evaluation
+==================================
+
+Classification report:
+               precision    recall  f1-score   support
+
+         dent       0.73      0.75      0.74       157
+      scratch       0.65      0.86      0.74       183
+        crack       0.29      0.62      0.39        48
+glass shatter       0.86      0.92      0.88        71
+  lamp broken       0.57      0.80      0.67        65
+    tire flat       0.56      0.94      0.70        31
+
+    micro avg       0.62      0.81      0.70       555
+    macro avg       0.61      0.81      0.69       555
+ weighted avg       0.65      0.81      0.72       555
+  samples avg       0.69      0.84      0.72       555
+
+
+Macro F1: 0.687780
+Micro F1: 0.704688
+
+Per-class precision, recall, F1:
+dent: precision=0.728395, recall=0.751592, f1=0.739812
+scratch: precision=0.654167, recall=0.857923, f1=0.742317
+crack: precision=0.288462, recall=0.625000, f1=0.394737
+glass shatter: precision=0.855263, recall=0.915493, f1=0.884354
+lamp broken: precision=0.571429, recall=0.800000, f1=0.666667
+tire flat: precision=0.557692, recall=0.935484, f1=0.698795

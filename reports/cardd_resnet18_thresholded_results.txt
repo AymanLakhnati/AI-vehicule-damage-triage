@@ -1,0 +1,9 @@
+dent: precision=0.6419, recall=0.8790, f1=0.7419
+scratch: precision=0.6192, recall=0.9508, f1=0.7500
+crack: precision=0.3516, recall=0.6667, f1=0.4604
+glass shatter: precision=0.9836, recall=0.8451, f1=0.9091
+lamp broken: precision=0.5843, recall=0.8000, f1=0.6753
+tire flat: precision=0.9259, recall=0.8065, f1=0.8621
+
+Macro F1: 0.7331
+Micro F1: 0.7293
