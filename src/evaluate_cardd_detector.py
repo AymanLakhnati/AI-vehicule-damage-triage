@@ -13,10 +13,12 @@ except ImportError as exc:
 from cardd_detection_dataset import CarDDDetectionDataset
 from cardd_detector import build_detector
 
-MODELS_DIR = Path('models')
-VAL_ANNOTATIONS_PATH = Path('data/raw/cardd/CarDD_release/CarDD_COCO/annotations/instances_val2017.json')
-VAL_IMAGES_DIR = Path('data/raw/cardd/CarDD_release/CarDD_COCO/val2017')
-REPORT_PATH = Path('reports/cardd_detector_validation_results.txt')
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DATA_ROOT = REPO_ROOT / 'data' / 'raw' / 'cardd' / 'CarDD_release' / 'CarDD_COCO'
+MODELS_DIR = REPO_ROOT / 'models'
+VAL_ANNOTATIONS_PATH = DATA_ROOT / 'annotations' / 'instances_val2017.json'
+VAL_IMAGES_DIR = DATA_ROOT / 'val2017'
+REPORT_PATH = REPO_ROOT / 'reports' / 'cardd_detector_validation_results.txt'
 BATCH_SIZE = 2
 NUM_WORKERS = 0
 

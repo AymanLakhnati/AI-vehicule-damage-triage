@@ -1,4 +1,4 @@
-import json
+import argparse
 from pathlib import Path
 
 import torch
@@ -7,12 +7,13 @@ from torch.utils.data import DataLoader
 from cardd_detection_dataset import CarDDDetectionDataset
 from cardd_detector import build_detector
 
-TRAIN_ANNOTATIONS_PATH = 'data/raw/cardd/CarDD_release/CarDD_COCO/annotations/instances_train2017.json'
-VAL_ANNOTATIONS_PATH = 'data/raw/cardd/CarDD_release/CarDD_COCO/annotations/instances_val2017.json'
-TRAIN_IMAGES_DIR = 'data/raw/cardd/CarDD_release/CarDD_COCO/train2017'
-VAL_IMAGES_DIR = 'data/raw/cardd/CarDD_release/CarDD_COCO/val2017'
-MODELS_DIR = Path('models')
-EPOCHS = 5
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DATA_ROOT = REPO_ROOT / 'data' / 'raw' / 'cardd' / 'CarDD_release' / 'CarDD_COCO'
+TRAIN_ANNOTATIONS_PATH = DATA_ROOT / 'annotations' / 'instances_train2017.json'
+VAL_ANNOTATIONS_PATH = DATA_ROOT / 'annotations' / 'instances_val2017.json'
+TRAIN_IMAGES_DIR = DATA_ROOT / 'train2017'
+VAL_IMAGES_DIR = DATA_ROOT / 'val2017'
+MODELS_DIR = REPO_ROOT / 'models'
 BATCH_SIZE = 2
 NUM_WORKERS = 0
 
@@ -91,26 +92,35 @@ def evaluate_coco(model: torch.nn.Module, data_loader: DataLoader, annotations_f
     }
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='Train the CarDD object detector')
+    parser.add_argument('--epochs', type=int, default=5, help='Number of training epochs')
+    parser.add_argument('--batch-size', type=int, default=BATCH_SIZE, help='Batch size for training and validation')
+    parser.add_argument('--num-workers', type=int, default=NUM_WORKERS, help='Number of DataLoader workers')
+    return parser.parse_args()
+
+
 def main():
+    args = parse_args()
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f'Using device: {device}')
 
-    train_dataset = CarDDDetectionDataset(TRAIN_ANNOTATIONS_PATH, TRAIN_IMAGES_DIR)
-    val_dataset = CarDDDetectionDataset(VAL_ANNOTATIONS_PATH, VAL_IMAGES_DIR)
+    train_dataset = CarDDDetectionDataset(str(TRAIN_ANNOTATIONS_PATH), str(TRAIN_IMAGES_DIR))
+    val_dataset = CarDDDetectionDataset(str(VAL_ANNOTATIONS_PATH), str(VAL_IMAGES_DIR))
 
     train_loader = DataLoader(
         train_dataset,
-        batch_size=BATCH_SIZE,
+        batch_size=args.batch_size,
         shuffle=True,
-        num_workers=NUM_WORKERS,
+        num_workers=args.num_workers,
         collate_fn=collate_fn,
     )
 
     val_loader = DataLoader(
         val_dataset,
-        batch_size=BATCH_SIZE,
+        batch_size=args.batch_size,
         shuffle=False,
-        num_workers=NUM_WORKERS,
+        num_workers=args.num_workers,
         collate_fn=collate_fn,
     )
 
@@ -122,7 +132,7 @@ def main():
         weight_decay=0.0005,
     )
 
-    for epoch in range(1, EPOCHS + 1):
+    for epoch in range(1, args.epochs + 1):
         model.train()
         total_losses = []
         loss_components = {
@@ -154,7 +164,7 @@ def main():
         avg_objectness = sum(loss_components['loss_objectness']) / len(loss_components['loss_objectness'])
         avg_rpn_box = sum(loss_components['loss_rpn_box_reg']) / len(loss_components['loss_rpn_box_reg'])
 
-        print(f'Epoch {epoch}/{EPOCHS}')
+        print(f'Epoch {epoch}/{args.epochs}')
         print(f'total_loss={avg_total:.4f}')
         print(f'classifier_loss={avg_classifier:.4f}')
         print(f'box_reg_loss={avg_box_reg:.4f}')
