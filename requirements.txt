@@ -1,0 +1,7 @@
+gradio>=5.0
+Pillow>=10.0
+torch
+torchvision
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9

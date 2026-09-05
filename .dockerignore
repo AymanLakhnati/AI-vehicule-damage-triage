@@ -1,0 +1,9 @@
+.git
+.venv
+__pycache__
+*.ipynb
+feedback_data
+out
+reports
+data
+models/*.pth

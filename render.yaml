@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: autotriage-api
+    runtime: docker
+    plan: starter
+    healthCheckPath: /ready
+    envVars:
+      - key: ADMIN_TOKEN
+        sync: false
+      - key: APP_API_KEY
+        sync: false
+      - key: CLASSIFIER_CHECKPOINT
+        value: /data/models/cardd_resnet18_finetuned.pth
+      - key: DATABASE_PATH
+        value: /data/autotriage.db
+      - key: FEEDBACK_DIR
+        value: /data/feedback_data
+      - key: PARTNERS_PATH
+        value: /app/config/verified_partners.json
+      - key: CORS_ORIGINS
+        sync: false
+    disk:
+      name: autotriage-data
+      mountPath: /data
+      sizeGB: 10

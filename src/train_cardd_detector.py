@@ -305,6 +305,13 @@ def parse_args():
         help="Number of DataLoader workers.",
     )
 
+    parser.add_argument(
+        "--resume-epoch",
+        type=int,
+        default=None,
+        help="Resume from the specified saved epoch.",
+    )
+
     return parser.parse_args()
 
 
@@ -430,12 +437,28 @@ def main():
         weight_decay=0.0005,
     )
 
+    start_epoch = 1
+    if args.resume_epoch is not None:
+        resume_model_path = MODELS_DIR / f"cardd_detector_epoch{args.resume_epoch}.pth"
+        resume_training_path = MODELS_DIR / f"cardd_detector_epoch{args.resume_epoch}_training.pth"
+        if not resume_model_path.exists():
+            raise FileNotFoundError(f"Model checkpoint not found: {resume_model_path}")
+        if not resume_training_path.exists():
+            raise FileNotFoundError(f"Training checkpoint not found: {resume_training_path}")
+
+        print(f"Loading model checkpoint: {resume_model_path}")
+        model.load_state_dict(torch.load(resume_model_path, map_location=device))
+        training_checkpoint = torch.load(resume_training_path, map_location=device)
+        optimizer.load_state_dict(training_checkpoint["optimizer_state_dict"])
+        start_epoch = args.resume_epoch + 1
+        print(f"Resuming after epoch {args.resume_epoch}. Next epoch: {start_epoch}")
+
     # --------------------------------------------------------
     # Epoch loop
     # --------------------------------------------------------
 
     for epoch in range(
-        1,
+        start_epoch,
         args.epochs + 1,
     ):
 

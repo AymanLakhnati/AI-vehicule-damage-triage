@@ -1,0 +1,26 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: "8000"
+      ADMIN_TOKEN: ${ADMIN_TOKEN:?Set ADMIN_TOKEN in your environment}
+      CLASSIFIER_CHECKPOINT: /models/cardd_resnet18_finetuned.pth
+      DETECTOR_CHECKPOINT: ${DETECTOR_CHECKPOINT:-}
+      FEEDBACK_DIR: /data/feedback_data
+      DATABASE_PATH: /data/autotriage.db
+      PARTNERS_PATH: /data/config/verified_partners.json
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+    volumes:
+      - ${MODEL_DIR:-./models}:/models:ro
+      - app_data:/data
+      - ./config:/data/config:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  app_data:

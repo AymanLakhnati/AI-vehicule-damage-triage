@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "AutoTriage",
+    "slug": "autotriage",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow AutoTriage to choose a vehicle photo.",
+          "cameraPermission": "Allow AutoTriage to take a vehicle photo."
+        }
+      ]
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.autotriage.app"
+    },
+    "android": {
+      "package": "com.autotriage.app"
+    }
+  }
+}

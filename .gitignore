@@ -2,6 +2,10 @@ data/
 *.pth
 *.pt
 __pycache__/
+mobile/node_modules/
+mobile/.expo/
+mobile/.env
 .ipynb_checkpoints/
 .venv/
 .env
+feedback_data/
