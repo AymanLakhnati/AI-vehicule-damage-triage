@@ -19,7 +19,16 @@
       "bundleIdentifier": "com.autotriage.app"
     },
     "android": {
-      "package": "com.autotriage.app"
-    }
+      "package": "com.autotriage.app",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "66cd7999-542f-4e25-9331-8f3ff26c9ae4"
+      }
+    },
+    "owner": "aymanlkhn"
   }
 }
