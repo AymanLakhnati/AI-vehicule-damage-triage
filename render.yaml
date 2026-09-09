@@ -10,7 +10,7 @@ services:
       - key: APP_API_KEY
         sync: false
       - key: CLASSIFIER_CHECKPOINT
-        value: /data/models/cardd_resnet18_finetuned.pth
+        value: /app/models/cardd_resnet18_finetuned.pth
       - key: DATABASE_PATH
         value: /data/autotriage.db
       - key: FEEDBACK_DIR

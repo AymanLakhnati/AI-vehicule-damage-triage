@@ -51,13 +51,13 @@ For classifier-only mode, mount `cardd_resnet18_finetuned.pth` and set `CLASSIFI
 
 ## First cloud deployment
 
-`render.yaml` provisions the API with a persistent disk and `/ready` health checks. The private disk must contain the model files at:
+`render.yaml` provisions the API with the classifier checkpoint baked into the image, a persistent disk for application data, and `/ready` health checks. The image includes:
 
 ```text
-/data/models/cardd_resnet18_finetuned.pth
+/app/models/cardd_resnet18_finetuned.pth
 ```
 
-The first Render release runs with the classifier fallback. After uploading `cardd_detector_epoch4.pth` to `/data/models`, add `DETECTOR_CHECKPOINT=/data/models/cardd_detector_epoch4.pth` in Render and redeploy.
+The first Render release runs with the classifier fallback and requires no manual model upload. After obtaining the private detector checkpoint, it can be added as a separate image or mounted private asset.
 
 Set `ADMIN_TOKEN`, `APP_API_KEY`, and `CORS_ORIGINS` as secret environment variables in the hosting dashboard. Do not commit model weights or secrets.
 

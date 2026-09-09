@@ -1,6 +1,7 @@
 data/
 *.pth
 *.pt
+!models/cardd_resnet18_finetuned.pth
 __pycache__/
 mobile/node_modules/
 mobile/.expo/

@@ -7,3 +7,4 @@ out
 reports
 data
 models/*.pth
+!models/cardd_resnet18_finetuned.pth
