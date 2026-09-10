@@ -5,7 +5,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PORT=8000 \
     OMP_NUM_THREADS=1 \
     MKL_NUM_THREADS=1 \
-    TORCH_NUM_THREADS=1
+    TORCH_NUM_THREADS=1 \
+    INFERENCE_MODE=screening-fallback
 
 WORKDIR /app
 COPY requirements.txt .
