@@ -11,6 +11,8 @@ services:
         sync: false
       - key: CLASSIFIER_CHECKPOINT
         value: /app/models/cardd_resnet18_finetuned.pth
+      - key: INFERENCE_MODE
+        value: screening-fallback
       - key: DATABASE_PATH
         value: /data/autotriage.db
       - key: FEEDBACK_DIR

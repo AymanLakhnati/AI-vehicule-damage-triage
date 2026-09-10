@@ -109,7 +109,8 @@ def health():
 def ready():
     classifier_path = Path(os.getenv("CLASSIFIER_CHECKPOINT", ROOT / "models" / "cardd_resnet18_finetuned.pth"))
     detector_path = os.getenv("DETECTOR_CHECKPOINT")
-    if not classifier_path.exists() and not (detector_path and Path(detector_path).exists()):
+    fallback_enabled = os.getenv("INFERENCE_MODE") == "screening-fallback"
+    if not fallback_enabled and not classifier_path.exists() and not (detector_path and Path(detector_path).exists()):
         raise HTTPException(status_code=503, detail="No inference model is configured.")
     return {"status": "ready", "device": str(DEVICE)}
 

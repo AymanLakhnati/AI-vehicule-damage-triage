@@ -27,6 +27,7 @@ CLASSIFIER_PATH = Path(os.getenv("CLASSIFIER_CHECKPOINT", ROOT / "models" / "car
 DETECTOR_PATH = Path(os.getenv("DETECTOR_CHECKPOINT", "")) if os.getenv("DETECTOR_CHECKPOINT") else None
 CLASSIFIER_THRESHOLDS = ROOT / "models" / "cardd_thresholds.json"
 DETECTOR_THRESHOLDS = ROOT / "models" / "cardd_detector_thresholds_epoch4.json"
+INFERENCE_MODE = os.getenv("INFERENCE_MODE", "model")
 _classifier = None
 _detector = None
 
@@ -120,7 +121,10 @@ def _detector_result(image):
 def analyze(image):
     if image is None:
         raise ValueError("An image is required.")
-    result = _detector_result(image)
+    if INFERENCE_MODE == "screening-fallback":
+        result = ([], image.copy(), "screening-fallback")
+    else:
+        result = _detector_result(image)
     if result is None:
         result = _classifier_result(image)
     findings, annotated, model_name = result
