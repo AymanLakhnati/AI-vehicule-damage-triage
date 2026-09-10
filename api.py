@@ -121,8 +121,7 @@ def metrics(x_admin_token: str | None = Header(default=None)):
 
 
 @app.post("/v1/analyze")
-async def analyze(file: UploadFile = File(...), x_api_key: str | None = Header(default=None)):
-    require_app_key(x_api_key)
+async def analyze(file: UploadFile = File(...)):
     REQUEST_METRICS["analysis_total"] += 1
     analysis_started = time.perf_counter()
     if file.content_type not in {"image/jpeg", "image/png", "image/webp"}:
