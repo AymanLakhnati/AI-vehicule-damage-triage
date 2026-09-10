@@ -29,6 +29,18 @@ function createImageUpload(image: ImagePicker.ImagePickerAsset) {
   return body;
 }
 
+async function responseError(response: Response, fallback: string) {
+  const text = await response.text();
+  try {
+    const payload = JSON.parse(text) as { detail?: string };
+    return payload.detail ?? fallback;
+  } catch {
+    return response.status >= 500
+      ? 'The analysis server is temporarily unavailable. Please try again in a moment.'
+      : fallback;
+  }
+}
+
 export default function App() {
   const [image, setImage] = useState<ImagePicker.ImagePickerAsset | null>(null);
   const [result, setResult] = useState<Result | null>(null);
@@ -100,8 +112,9 @@ export default function App() {
     try {
       const body = createImageUpload(image);
       const response = await fetch(`${API_URL}/v1/analyze`, { method: 'POST', headers: API_KEY ? { 'X-API-Key': API_KEY } : undefined, body });
-      if (!response.ok) throw new Error((await response.json()).detail ?? 'Analysis failed.');
-      setResult(await response.json());
+      if (!response.ok) throw new Error(await responseError(response, 'Analysis failed.'));
+      const payload = await response.json() as Result;
+      setResult(payload);
       const partnerResponse = await fetch(`${API_URL}/v1/partners?city=Dubai`);
       if (partnerResponse.ok) {
         const partnerData = await partnerResponse.json();
