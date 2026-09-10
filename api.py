@@ -81,6 +81,18 @@ def require_app_key(api_key: str | None):
         raise HTTPException(status_code=401, detail="Application authentication required.")
 
 
+@app.get("/")
+def root():
+    return {
+        "service": "AutoTriage API",
+        "status": "online",
+        "health": "/health",
+        "readiness": "/ready",
+        "documentation": "/docs",
+        "analysis": "/v1/analyze",
+    }
+
+
 @app.get("/health")
 def health():
     classifier_path = Path(os.getenv("CLASSIFIER_CHECKPOINT", ROOT / "models" / "cardd_resnet18_finetuned.pth"))
