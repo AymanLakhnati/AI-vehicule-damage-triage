@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ActivityIndicator, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { File } from 'expo-file-system';
 import { StatusBar } from 'expo-status-bar';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://127.0.0.1:8000';
@@ -20,6 +21,13 @@ type Result = {
   };
 };
 type Partner = { id: string; name: string; city: string; phone?: string; address?: string };
+
+function createImageUpload(image: ImagePicker.ImagePickerAsset) {
+  const body = new FormData();
+  const file = new File(image.uri);
+  body.append('file', file as unknown as Blob);
+  return body;
+}
 
 export default function App() {
   const [image, setImage] = useState<ImagePicker.ImagePickerAsset | null>(null);
@@ -59,8 +67,7 @@ export default function App() {
 
   async function sendFeedback() {
     if (!image || !result || !consent || !correction.trim()) return;
-    const body = new FormData();
-    body.append('file', { uri: image.uri, name: 'vehicle.jpg', type: image.mimeType ?? 'image/jpeg' } as any);
+    const body = createImageUpload(image);
     body.append('corrected_labels', correction.trim());
     body.append('consent_to_training', String(consent));
     try {
@@ -91,8 +98,7 @@ export default function App() {
     setBusy(true);
     setError('');
     try {
-      const body = new FormData();
-      body.append('file', { uri: image.uri, name: 'vehicle.jpg', type: image.mimeType ?? 'image/jpeg' } as any);
+      const body = createImageUpload(image);
       const response = await fetch(`${API_URL}/v1/analyze`, { method: 'POST', headers: API_KEY ? { 'X-API-Key': API_KEY } : undefined, body });
       if (!response.ok) throw new Error((await response.json()).detail ?? 'Analysis failed.');
       setResult(await response.json());
