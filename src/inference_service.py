@@ -6,6 +6,9 @@ import torch
 import torchvision.transforms as transforms
 from PIL import Image, ImageDraw, ImageFont
 
+torch.set_num_threads(int(os.getenv("TORCH_NUM_THREADS", "1")))
+torch.set_num_interop_threads(1)
+
 from cardd_detector import build_detector
 from cardd_model import build_cardd_model
 from triage_service import assess
